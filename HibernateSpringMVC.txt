@@ -1,0 +1,662 @@
+
+
+web.xml
+*******
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>SpringMVC</display-name>
+  <welcome-file-list>
+  <welcome-file>index.jsp</welcome-file>
+  <welcome-file>index.htm</welcome-file>
+  <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  
+<servlet>  
+    <servlet-name>spring</servlet-name>  
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+    <load-on-startup>1</load-on-startup>    
+</servlet>  
+<servlet-mapping>  
+    <servlet-name>spring</servlet-name>  
+    <url-pattern>*.htm</url-pattern>  
+</servlet-mapping>  
+</web-app>
+
+spring-servlet.xml
+******************
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/jsp/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/springdb" />
+		<property name="username" value="root" />
+		<property name="password" value="dsrc" />
+	</bean>
+
+
+	<bean id="hibernate5AnnotatedSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.dsrc.bean.RegisterBean</value>
+			</list>
+		</property>
+
+		
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="profileDAO" class="com.dsrc.dao.ProfileManagementDAO">
+		<property name="sessionFactory" ref="hibernate5AnnotatedSessionFactory" />
+	</bean>
+	
+	<bean id="profileBO" class="com.dsrc.bo.ProfileManagementBO">
+		<property name="profileDAO" ref="profileDAO" />
+	</bean>
+	
+	<context:component-scan base-package="com.dsrc.controller"></context:component-scan>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="hibernate5AnnotatedSessionFactory" />
+	</bean>
+	
+</beans>
+
+RegisterBean.java
+*****************
+package com.dsrc.bean;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="EmpMag")
+public class RegisterBean 
+{
+	@Column(name="name")
+	private String name;
+	@Id
+	@Column(name="user")
+	private int user;
+	@Column(name="pass")
+	private String pass;
+	@Column(name="age")
+	private int age;
+	@Column(name="no")
+	private String no;
+	@Column(name="city")
+	private String city;
+	
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getUser() {
+		return user;
+	}
+	public void setUser(int user) {
+		this.user = user;
+	}
+	public String getPass() {
+		return pass;
+	}
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	@Override
+	public String toString() {
+		return "RegisterBean [name=" + name + ", user=" + user + ", pass=" + pass + ", age=" + age + ", no=" + no
+				+ ", city=" + city + "]";
+	}
+		
+}
+
+ProfileBO.java
+**************
+package com.dsrc.bo;
+
+import java.util.List;
+
+import com.dsrc.bean.RegisterBean;
+
+public interface ProfileBO {
+
+	public boolean addPerson(RegisterBean p);
+	public boolean updatePerson(RegisterBean p);
+	public boolean removePerson(int id);
+	public boolean changePassword(String pass,int id);
+	public List<RegisterBean> login(RegisterBean r);
+
+}
+
+ProfileMangementBO.java
+***********************
+package com.dsrc.bo;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dsrc.bean.RegisterBean;
+import com.dsrc.dao.ProfileDAO;
+
+@Service
+public class ProfileManagementBO implements ProfileBO
+{
+	
+	private ProfileDAO profileDAO;
+	
+	@Transactional
+	public void setProfileDAO(ProfileDAO profileDAO) {
+		this.profileDAO = profileDAO;
+	}
+
+	@Override
+	@Transactional
+	public boolean addPerson(RegisterBean p) {
+		return profileDAO.addPerson(p);
+		
+	}
+
+	@Override
+	@Transactional
+	public boolean updatePerson(RegisterBean p) {
+		return profileDAO.updatePerson(p);
+		
+	}
+
+	@Override
+	@Transactional
+	public boolean removePerson(int id) {
+		// TODO Auto-generated method stub
+		return this.profileDAO.removePerson(id);
+		
+	}
+	@Override
+	@Transactional
+	public List<RegisterBean> login(RegisterBean r) {
+				
+		return this.profileDAO.login(r);				
+	}
+
+	@Override
+	@Transactional
+	public boolean changePassword(String pass,int id) {
+		
+		return this.profileDAO.changePassword(pass,id);
+		
+	}
+}
+
+ProfileDAO.java
+***************
+package com.dsrc.dao;
+
+import java.util.List;
+
+import com.dsrc.bean.RegisterBean;
+
+public interface ProfileDAO {
+	
+		public boolean addPerson(RegisterBean p);
+		public boolean updatePerson(RegisterBean p);
+		public boolean removePerson(int id);
+		public boolean changePassword(String pass,int id);
+		public List<RegisterBean> login(RegisterBean r);
+		
+}
+
+ProfileManagementDAO.java
+*************************
+package com.dsrc.dao;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
+
+import com.dsrc.bean.RegisterBean;
+
+@Repository
+public class ProfileManagementDAO implements ProfileDAO{
+	
+
+private SessionFactory sessionFactory;
+	
+	public void setSessionFactory(SessionFactory sf){
+		this.sessionFactory = sf;
+	}
+	
+	@Override
+	public boolean addPerson(RegisterBean p) {
+		
+	Session session=this.sessionFactory.getCurrentSession();
+		
+		session.save(p);
+		return true;
+		
+	}
+
+	@Override
+	public boolean updatePerson(RegisterBean p) {
+		
+		Session session=this.sessionFactory.getCurrentSession();
+		session.update(p);
+		return true;
+	
+	}
+
+
+	@Override
+	public boolean removePerson(int id) {
+		
+		Session session=this.sessionFactory.getCurrentSession();		
+		RegisterBean r=session.get(RegisterBean.class, id);
+		session.delete(r);
+		
+		return true;
+	}
+
+	@Override
+	public List<RegisterBean> login(RegisterBean p) {
+		
+		Session session=this.sessionFactory.getCurrentSession();
+
+		 Query<RegisterBean> theQuery = session.createQuery("from RegisterBean where user=:id and pass=:pass", RegisterBean.class);
+		 theQuery.setInteger("id", p.getUser());
+		 theQuery.setString("pass", p.getPass());
+		 List l=theQuery.list();
+	
+  		return l;
+	}
+
+	@Override
+	public boolean changePassword(String pass,int id) {
+		
+		Session session=this.sessionFactory.getCurrentSession();
+		Query q=session.createQuery("update RegisterBean set pass=:pa where user=:i");
+		q.setString("pa", pass);
+		q.setInteger("i", id);		
+		q.executeUpdate();
+		return true;
+	}
+}
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.dsrc.bean.RegisterBean;
+import com.dsrc.bo.ProfileBO;
+
+@Controller
+public class MyController {
+		
+	private ProfileBO profileBO;	
+	
+	List l=null;
+	
+	@Autowired
+	@Qualifier(value="profileBO")
+	public void setProfileBO(ProfileBO bo)
+	{
+		this.profileBO=bo;
+	}
+	
+	@RequestMapping("/index.htm")
+	public String index()
+	{
+		return "index";
+	}
+	@RequestMapping("/Register.htm")
+	public String register(Model m)
+	{	
+		m.addAttribute("reg",new RegisterBean());
+		return "Register";	
+	}
+	@RequestMapping(value="/save.htm",method = RequestMethod.POST)  
+    public String save(@ModelAttribute("reg") RegisterBean reg)
+	{  	
+		boolean res=false;
+		res=profileBO.addPerson(reg);
+		if(res)
+		{
+		return "Home";
+		} 
+		return "error";
+    } 
+	@RequestMapping("/Login.htm")
+	public String login(Model m)
+	{		
+		m.addAttribute("reg",new RegisterBean());
+		return "Login";		
+	}
+	@RequestMapping(value="/loginval.htm",method=RequestMethod.POST)
+	public String loginval(@ModelAttribute("log") RegisterBean log)
+	{
+		
+		l=this.profileBO.login(log);
+		return "redirect:/ViewProfile.htm";		
+	}	
+	@RequestMapping("/ViewProfile.htm")
+	public String view(Model m)
+	{
+		m.addAttribute("log",new RegisterBean());
+		m.addAttribute("list",l);
+		return "ViewProfile";
+	}
+	@RequestMapping("/edit.htm")
+	public String edit(Model m)
+	{
+			m.addAttribute("reg",new RegisterBean());	
+			m.addAttribute("list",l);
+			return "EditProfile";		
+			
+	}
+	@RequestMapping("/saveedit.htm")
+	public String saveedit(@ModelAttribute("sav") RegisterBean reg)
+	{
+		this.profileBO.updatePerson(reg);
+		
+		return "Home";		
+	}
+	@RequestMapping("/Delete.htm")
+	public String delete()
+	{
+
+		RegisterBean r=new RegisterBean();
+		for(Iterator i=l.iterator();i.hasNext();)
+		{
+			 r=(RegisterBean) i.next();
+		}
+		this.profileBO.removePerson(r.getUser());
+				
+		return "Home";		
+	}
+	@RequestMapping("/ChangePass.htm")
+	public String changepass()
+	{
+		return "ChangePassword";	
+	}
+	@RequestMapping("/change.htm")
+	public String change(HttpServletRequest request,HttpServletResponse response)
+	{
+		String pass=request.getParameter("new");
+		System.out.println(pass);
+		RegisterBean r=new RegisterBean();
+		for(Iterator i=l.iterator();i.hasNext();)
+		{
+			 r=(RegisterBean) i.next();
+		}
+		int id=r.getUser();
+		System.out.println(id);
+		this.profileBO.changePassword(pass,id);
+		return "Home";		
+	}
+	@RequestMapping("/Home.htm")
+	public String home()
+	{
+		return "Home";
+	}
+	
+}
+
+index.jsp
+**********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Index</title>
+</head>
+<body>
+<center>
+<h1>Welcome to Employee Management</h1>
+<table>
+<tr><td>New User</td><td><form action="Register.htm"><input type="submit" value="Register"></form></td></tr>
+<tr><td>Old User</td><td><form action="Login.htm"><input type="submit" value="Login"></form></td></tr>
+</table>
+</center>
+</body>
+</html>
+
+Register.jsp
+************
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
+<center>
+		<h1>Welcome</h1>
+       <form:form method="post" action="save.htm" modelAttribute="reg">  
+      	<table >  
+         <tr>  
+          <td>Name : </td> 
+          <td><form:input path="name"  /></td>
+         </tr>  
+         <tr>  
+          <td>UserId :</td>  
+          <td><form:input path="user" /></td>
+         </tr> 
+         <tr>  
+          <td>Password :</td>  
+          <td><form:password path="pass" /></td>
+         </tr> 
+           <tr>  
+          <td>Age :</td>  
+          <td><form:input path="age" /></td>
+         </tr> 
+           <tr>  
+          <td>MobileNo :</td>  
+          <td><form:input path="no" /></td>
+         </tr> 
+           <tr>  
+          <td>City :</td>  
+          <td><form:input path="city" /></td>
+         </tr> 
+         
+         <tr>  
+          <td> </td>  
+          <td><input type="submit" value="Save" /></td>  
+         </tr>  
+        </table>  
+       </form:form>  
+</center>
+
+Login.jsp
+*********
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
+<center>
+		<h1>Login Page</h1>
+       <form:form method="post" action="loginval.htm" modelAttribute="reg">  
+      	<table >  
+         <tr>  
+          <td>UserId :</td>  
+          <td><form:input path="user" /></td>
+         </tr> 
+         <tr>  
+          <td>Password :</td>  
+          <td><form:password path="pass" /></td>
+         </tr>       
+         <tr>  
+          <td> </td>  
+          <td><input type="submit" value="Save" /></td>  
+         </tr>  
+        </table>  
+       </form:form>  
+</center>
+
+ViewProfile.jsp
+***************
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
+<center>
+		<h1>Welcome</h1>
+ 
+<c:forEach items="${list}" var="log">
+<table border="1">
+	<tr><td>Name</td><td>${log.name}</td></tr>
+	<tr><td>UserID</td><td>${log.user}</td></tr>
+	<tr><td>Password</td><td>${log.pass}</td></tr>
+	<tr><td>Age</td><td>${log.age }</td></tr>
+	<tr><td>MobileNo</td><td>${log.no }</td></tr>
+	<tr><td>City</td><td>${log.city}</td></tr>
+	<tr><td><form action="edit.htm"><input type="submit" name="edit" value="EditProfile"></form></td>
+	<td><form action="Delete.htm"><input type="submit" name="delete" value="DeleteProfile"></form></td></tr>
+	<tr><td><form action="ChangePass.htm"><input type="submit" name="delete" value="ChangePassword"></form></td>
+	<td><form action="Home.htm"><input type="submit" name="delete" value="Logout"></form></td></tr>
+</table>
+	</c:forEach> 
+</center>
+
+EditProfile.jsp
+***************
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
+<center>
+<h1>Edit Profile</h1>
+<form:form action="saveedit.htm" modelAttribute="reg">
+<c:forEach items="${list}" var="reg">
+      	<table >  
+         <tr>  
+          <td>Name : </td> 
+          <td><form:input path="name" value="${reg.name}" /></td>
+         </tr>  
+         <tr>  
+          <td>UserId :</td>  
+          <td><form:input path="user" value="${reg.user}"/></td>
+         </tr> 
+           <tr>  
+              <td>Password :</td>  
+          <td><form:input path="pass" value="${reg.pass}"/></td>
+         </tr> 
+           <tr>  
+          <td>Age :</td>  
+          <td><form:input path="age" value="${reg.age}"/></td>
+         </tr> 
+           <tr>  
+          <td>MobileNo :</td>  
+          <td><form:input path="no" value="${reg.no}"/></td>
+         </tr> 
+           <tr>  
+          <td>City :</td>  
+          <td><form:input path="city" value="${reg.city}"/></td>
+         </tr> 
+         
+         <tr>  
+          <td> </td>  
+          <td><input type="submit" value="Save" /></td>  
+         </tr>  
+        </table>  
+</c:forEach>
+</form:form>
+</center>
+
+ChangePassword.jsp
+******************
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<center>
+<h1>ChangePassword</h1>
+<form action="change.htm">
+<table>
+<tr><td>Old Password</td><td><input type="password" name="old"></td></tr>
+<tr><td>New Password</td><td><input type="password" name="new"></td></tr>
+<tr><td></td><td><input type="submit" value="change"></td></tr>
+</table>
+</form>
+</center>
+</body>
+</html>
+
+Home.jsp
+********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Success</h1>
+For Home Page<a href="index.htm">Click Here</a>
+</body>
+</html>
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________

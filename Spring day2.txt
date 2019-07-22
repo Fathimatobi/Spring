@@ -1,0 +1,525 @@
+1.Create a Spring Application. ( Type :  Singleton Bean Scope WITH XML Configuration)
+
+Employee.java
+*************
+package com.dsrc.bean;
+
+public class Employee 
+{
+	private int empno;
+	private String name;
+	private String city;
+	public int getEmpno() {
+		return empno;
+	}
+	public void setEmpno(int empno) {
+		this.empno = empno;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	@Override
+	public String toString() {
+		return "Employee [empno=" + empno + ", name=" + name + ", city=" + city + "]";
+	}
+	
+}
+
+context.xml
+***********
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+<bean id="mybean" class="com.dsrc.bean.Employee" scope="singleton">
+</bean>
+</beans>
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import com.dsrc.bean.Employee;
+
+public class MyMain {
+	
+	public static void main(String[] args) {
+		Resource resource=new ClassPathResource("context.xml");
+	    BeanFactory beanfactory=new XmlBeanFactory(resource);
+        Employee object1=(Employee) beanfactory.getBean("mybean");
+        object1.setEmpno(101);
+        object1.setName("Mark");
+        object1.setCity("Washington");
+        Employee object2=(Employee) beanfactory.getBean("mybean");
+        object2.setEmpno(102);
+        object2.setName("Walter");
+        object2.setCity("Vienna");
+        System.out.println(object1);
+        System.out.println(object2);
+	}
+}
+
+Output
+******
+Employee [empno=102, name=Walter, city=Vienna]
+Employee [empno=102, name=Walter, city=Vienna]
+____________________________________________________________________________________________________________________________________________________
+
+2.Create a Spring Application. ( Type :  Singleton Bean Scope WITH Annotations)
+
+
+Employee.java
+*************
+package com.dsrc.beans;
+
+public class Employee 
+{
+	private int empno;
+	private String name;
+	private String city;
+	public int getEmpno() {
+		return empno;
+	}
+	public void setEmpno(int empno) {
+		this.empno = empno;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	@Override
+	public String toString() {
+		return "Employee [empno=" + empno + ", name=" + name + ", city=" + city + "]";
+	}
+	
+}
+
+ApplicationConfig.java
+**********************
+package com.dsrc.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+
+import com.dsrc.beans.Employee;
+
+public class ApplicationConfig {
+	@Bean(name = "hello")
+	@Scope("singleton")
+	 public Employee getBean() {
+		return new Employee();
+	 }
+}
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
+import com.dsrc.beans.Employee;
+import com.dsrc.config.ApplicationConfig;
+
+public class MyMain {
+	
+	public static void main(String[] args) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+		 Employee object1=(Employee) context.getBean("hello");
+	        object1.setEmpno(101);
+	        object1.setName("Mark");
+	        object1.setCity("Washington");
+	        Employee object2=(Employee) context.getBean("hello");
+	        object2.setEmpno(102);
+	        object2.setName("Walter");
+	        object2.setCity("Vienna");
+	        System.out.println(object1);
+	        System.out.println(object2);
+	        context.close();
+		}
+}
+
+Output
+******
+Employee [empno=102, name=Walter, city=Vienna]
+Employee [empno=102, name=Walter, city=Vienna]
+____________________________________________________________________________________________________________________________________
+
+3.Create a Spring Application. ( Type :  PROTOTYPE Bean Scope WITH XML Configuration)
+
+Employee.java
+*************
+package com.dsrc.beans;
+
+public class Employee 
+{
+	private int empno;
+	private String name;
+	private String city;
+	public int getEmpno() {
+		return empno;
+	}
+	public void setEmpno(int empno) {
+		this.empno = empno;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	@Override
+	public String toString() {
+		return "Employee [empno=" + empno + ", name=" + name + ", city=" + city + "]";
+	}
+	
+}
+context.xml
+***********
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+<bean id="mybean" class="com.dsrc.beans.Employee" scope="prototype">
+</bean>
+</beans>
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import com.dsrc.beans.Employee;
+
+public class MyMain {
+	
+	public static void main(String[] args) {
+		Resource resource=new ClassPathResource("context.xml");
+	    BeanFactory beanfactory=new XmlBeanFactory(resource);
+        Employee object1=(Employee) beanfactory.getBean("mybean");
+        object1.setEmpno(101);
+        object1.setName("Mark");
+        object1.setCity("Washington");
+        Employee object2=(Employee) beanfactory.getBean("mybean");
+        object2.setEmpno(102);
+        object2.setName("Walter");
+        object2.setCity("Vienna");
+        System.out.println(object1);
+        System.out.println(object2);
+
+	}
+}
+
+Output
+******
+Employee [empno=101, name=Mark, city=Washington]
+Employee [empno=102, name=Walter, city=Vienna]
+_______________________________________________________________________________________________________________________________________
+
+4.Create a Spring Application. ( Type :  PROTOTYPE Bean Scope WITH Annotations)
+
+Employee.java
+*************
+(same)
+
+ApplicationConfig.java
+***********************
+package com.dsrc.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+
+import com.dsrc.beans.Employee;
+
+public class ApplicationConfig {
+	@Bean(name = "hello")
+	@Scope("prototype")
+	 public Employee getBean() {
+		return new Employee();
+	 }
+}
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
+import com.dsrc.beans.Employee;
+import com.dsrc.config.ApplicationConfig;
+
+public class MyMain {
+	
+	public static void main(String[] args) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+		 Employee object1=(Employee) context.getBean("hello");
+	        object1.setEmpno(101);
+	        object1.setName("Mark");
+	        object1.setCity("Washington");
+	        Employee object2=(Employee) context.getBean("hello");
+	        object2.setEmpno(102);
+	        object2.setName("Walter");
+	        object2.setCity("Vienna");
+	        System.out.println(object1);
+	        System.out.println(object2);
+	        context.close();
+	}
+}
+
+Output
+******
+Employee [empno=101, name=Mark, city=Washington]
+Employee [empno=102, name=Walter, city=Vienna]
+___________________________________________________________________________________________________________________________________________________
+
+5.Create a Spring Application. ( Type :  BEAN LIFE CYCLE with XML Configuration)
+
+HelloWorld.java
+***************
+package com.dsrc.beans;
+
+public class HelloWorld {
+	private String message;
+
+	   public void setMessage(String message){
+	      this.message = message;
+	   }
+	   public void getMessage(){
+	      System.out.println("Your Message : " + message);
+	   }
+	   public void init(){
+	      System.out.println("Bean is going through init.");
+	   }
+	   public void destroy() {
+	      System.out.println("Bean will destroy now.");
+	   }
+}
+
+context.xml
+***********
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <bean id = "helloworld" class = "com.dsrc.beans.HelloWorld" init-method = "init" 
+      destroy-method = "destroy">
+      <property name = "message" value = "Hello World!"/>
+   </bean>
+</beans> 
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.dsrc.beans.HelloWorld;
+
+public class MyMain {
+	public static void main(String[] args) {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+	      HelloWorld obj = (HelloWorld) context.getBean("helloworld");
+	      obj.getMessage();
+	      context.registerShutdownHook();
+	}
+}
+
+Output
+******
+Bean is going through init.
+Your Message : Hello World!
+Bean will destroy now.
+______________________________________________________________________________________________________________________________________________________
+
+6.Create a Spring Application. ( Type :  BEAN LIFE CYCLE with Annotation)
+
+HelloWorld.java
+***************
+package com.dsrc.beans;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+public class HelloWorld {
+	private String message;
+
+	   public void setMessage(String message){
+	      this.message = message;
+	   }
+	   public void getMessage(){
+	      System.out.println("Your Message : " + message);
+	   }
+	   @PostConstruct
+	   public void init(){
+	      System.out.println("Bean is going through init.");
+	   }
+	   @PreDestroy
+	   public void destroy() {
+	      System.out.println("Bean will destroy now.");
+	   }
+}
+
+ApplicationConfig.java
+**********************
+package com.dsrc.config;
+
+import org.springframework.context.annotation.Bean;
+
+import com.dsrc.beans.HelloWorld;
+
+public class ApplicationConfig {
+	@Bean(name = "hello" )
+	 public HelloWorld getBean() {
+		return new HelloWorld();
+	 }
+}
+
+MyMain.java
+***********
+package com.dsrc;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+
+import com.dsrc.beans.HelloWorld;
+import com.dsrc.config.ApplicationConfig;
+
+public class MyMain {
+	
+	public static void main(String[] args) {
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);	      
+		HelloWorld obj = (HelloWorld) context.getBean("hello");
+	      obj.getMessage();
+	      context.registerShutdownHook();
+	}
+}
+
+Output
+******
+        Bean is going through init.
+	Your Message : Hello World!
+	Bean will destroy now.	
+__________________________________________________________________________________________________________________________________________________________
+
+7.Create a Spring MVC Application (Type : Spring MVC)
+
+HelloController.java
+********************
+package com.dsrc;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+@RequestMapping("/hello")
+public class HelloController 
+{
+	@RequestMapping(method = RequestMethod.GET)
+	 public String printHello(ModelMap model) 
+	{
+     model.addAttribute("message", "Hello Spring MVC Framework!");
+     return "hello";
+	}
+}
+
+web.xml
+*******
+<web-app id = "WebApp_ID" version = "2.4"
+   xmlns = "http://java.sun.com/xml/ns/j2ee" 
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://java.sun.com/xml/ns/j2ee 
+   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<display-name>Spring MVC Application</display-name>
+<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+</welcome-file-list>
+   <servlet>
+      <servlet-name>SpringMVCDemo</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>SpringMVCDemo</servlet-name>
+      <url-pattern>/</url-pattern>
+   </servlet-mapping>
+ 
+</web-app> 	   
+		
+SpringMVCDemo-servlet.xml
+**************************
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:context = "http://www.springframework.org/schema/context"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+   <context:component-scan base-package = "com.dsrc" />
+   
+   <bean class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name = "prefix" value = "/WEB-INF/jsp/" />
+      <property name = "suffix" value = ".jsp" />
+   </bean>
+
+	</beans>	 
+	
+hello.jsp
+*********
+<%@ page contentType = "text/html; charset = UTF-8" %>
+<html>
+   <head>
+      <title>Hello World</title>
+   </head>
+      <body>
+      <h2>${message}</h2>
+   </body>
+</html>
+
+Output
+******
+Hello Spring MVC Framework!
+_________________________________________________________________________________________________________________________________________________________________________

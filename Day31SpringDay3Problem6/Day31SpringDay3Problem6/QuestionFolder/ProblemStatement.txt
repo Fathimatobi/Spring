@@ -1,0 +1,39 @@
+Create a Spring MVC Application  ( Type :  Spring MVC with Spring Forms and ModelView )
+-------------------------------
+
+Task:
+-----
+
+PreRequisites : Add the required JAR Files.
+0.Create a bean named Login and  String loginname,String password in it.
+0.1 Generate Getters and Setters.
+1. Create a controller class named LoginController inside com.dsrc.controller package
+2. Create an empty constructor LoginController()
+3. Create request mapping methods for two actions
+		index.htm , sucess.htm and error.htm 
+		Sample Code as follows.
+		----------------------
+		
+		@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
+ 		public ModelAndView student(Model model) {
+	  
+	 				return new ModelAndView("index","command",model);
+ 		}
+ 
+ 	Sample login.htm action
+ 	
+ 	@RequestMapping("/login.htm")  
+	public String login(HttpServletRequest request, HttpServletResponse response,@ModelAttribute("Login")Login log,ModelMap model) {
+	  
+	// If the loginname and password is "SA" and "PASS" go to "succes.jsp" page.
+	// Else  to error.jsp
+  
+ 			 return "login";
+ 	  }
+ 	
+ 	
+		
+4.Add web.xml 
+5. Add  Third-servlet.xml
+6. Create a folder named jsp in /WEB_INF/ Folder
+7. Create the required jsp files.. (index , success , error)

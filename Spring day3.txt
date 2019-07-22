@@ -1,0 +1,864 @@
+1.
+Create a Spring MVC Application  ( Type :  Spring MVC )
+-------------------------------
+
+Task:
+-----
+Map two JSP pages using Spring MVC Controller.
+PreRequisiets : Add the required JAR Files.
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+web.xml
+********
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>SpringMVC1</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+   <servlet>
+      <servlet-name>First</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+ 
+   <servlet-mapping>
+      <servlet-name>First</servlet-name>
+      <url-pattern>*.htm</url-pattern>
+   </servlet-mapping>
+</web-app>     	  
+
+First-servlet.xml
+*****************
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+ 
+   <context:component-scan base-package="com.dsrc" />
+
+   <bean class=
+      "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+</beans>
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class MyController 
+{
+public MyController(){
+	
+}
+@RequestMapping("/index.htm")  
+	 public String welcome(HttpServletRequest request, HttpServletResponse response) 
+	 {
+
+		 return "index";
+	 }
+@RequestMapping("/login.htm")  
+public String welcome1(HttpServletRequest request, HttpServletResponse response) 
+{
+
+	 return "login";
+}
+}
+
+index.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <head>
+    <title>Spring MVC login example.</title>
+  </head>
+ 
+    <h1 ><a href="login.htm">Login page</a>
+    </h1>
+  </body>  
+
+</body>
+</html>
+
+login.jsp
+**********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+Welcome to Login
+</body>
+</html>
+____________________________________________________________________________________________________________________________________________
+2.
+
+web.xml
+*******
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>SpringMVC1</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+   <servlet>
+      <servlet-name>Second</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+ 
+   <servlet-mapping>
+      <servlet-name>Second</servlet-name>
+      <url-pattern>*.htm</url-pattern>
+   </servlet-mapping>
+</web-app>     	  
+
+Second-servlet.xml
+******************
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+ 
+   <context:component-scan base-package="com.dsrc" />
+
+   <bean class=
+      "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+</beans>
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class MyController 
+{
+public MyController(){
+	
+}
+@RequestMapping("/index.htm")  
+	 public String welcome(HttpServletRequest request, HttpServletResponse response) 
+	 {
+
+		 return "index";
+	 }
+@RequestMapping("/login.htm")  
+public String welcome1(HttpServletRequest request, HttpServletResponse response) 
+{
+
+	 return "login";
+}
+@RequestMapping("/home.htm")  
+public String welcome2(HttpServletRequest request, HttpServletResponse response) 
+{
+
+	 return "home";
+}
+}
+
+index.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <head>
+    <title>Spring MVC login example.</title>
+  </head>
+ 
+    <h1 ><a href="login.htm">Login page</a>
+    </h1>
+
+</body>
+</html>
+
+login.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Welcome to Login</h1>
+<br>
+<a href="home.htm"><input type="submit" value="Home"></a>
+</body>
+</html>
+
+home.jsp
+********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Welcome Home</h1>
+</body>
+</html>
+________________________________________________________________________________________________________________________________________________
+
+3.Create a Spring MVC Application  ( Type :  Spring MVC )
+-------------------------------
+
+Task:
+-----
+
+PreRequisites : Add the required JAR Files.
+0.Create a bean named Login and add a variable named name in it. 
+0.1 Generate Getters and Setters.
+1. Create a controller class named MyController inside com.dsrc.controller package
+2. Create an empty constructor MyController()
+3. Create request mapping methods for two actions
+		index.htm and login.htm
+		Sample Code as follows.
+		----------------------
+		 @RequestMapping("/index.htm")  
+  		 public String welcome(HttpServletRequest request, HttpServletResponse response) 
+  		 {
+	     
+    			 return "index";
+      	 }
+     	 
+4.Add web.xml 
+5. Add  Third-servlet.xml
+6. Create a folder named jsp in /WEB_INF/ Folder
+7. Add 2 JSP pages named index.jsp and login.jsp
+8. Design the jsp page to accept a Name using text box and submit.
+	
+	<form action= "login.htm" >
+  		Name <input type="text" name="name">
+  		 <input type = "submit" value = "Submit"/>
+ 	</form>
+ 9. Get the value in controller and print it in console.. 	
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+web.xml
+*******
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>SpringMVC1</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+   <servlet>
+      <servlet-name>Third</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+ 
+   <servlet-mapping>
+      <servlet-name>Third</servlet-name>
+      <url-pattern>*.htm</url-pattern>
+   </servlet-mapping>
+</web-app>     	  
+
+Third-servlet.xml
+*****************
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+ 
+   <context:component-scan base-package="com.dsrc" />
+
+   <bean class=
+      "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+</beans>
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.dsrc.bean.Login;
+
+@Controller
+public class MyController 
+{
+public MyController(){
+	
+}
+@RequestMapping("/index.htm")  
+	 public String welcome(HttpServletRequest request, HttpServletResponse response) 
+	 {
+
+		 return "index";
+	 }
+@RequestMapping("/login.htm")  
+public String welcome1(HttpServletRequest request, HttpServletResponse response) 
+{ 
+	String name=request.getParameter("name");
+	Login l=new Login(name); 
+System.out.println(l.getName());
+	 return "login";
+}
+}
+
+Login.java
+**********
+package com.dsrc.bean;
+
+public class Login {
+private String name;
+
+public Login(String name) {
+	this.name=name;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+}
+
+index.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+  <head>
+    <title>Spring MVC login example.</title>
+  </head>
+ <form action= "login.htm" >
+  		Name <input type="text" name="name">
+  		 <input type = "submit" value = "Submit"/>
+ 	</form>
+
+</body>
+</html>
+
+login.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Welcome to Login</h1>
+<br>
+</body>
+</html>
+____________________________________________________________________________________________________________________________________________________
+
+4.
+Create a Spring MVC Application  ( Type :  Spring MVC with Spring Forms and ModelView )
+-------------------------------
+
+Task:
+-----
+
+PreRequisites : Add the required JAR Files.
+0.Create a bean named Login and add a variable named name in it. 
+0.1 Generate Getters and Setters.
+1. Create a controller class named MyController inside com.dsrc.controller package
+2. Create an empty constructor MyController()
+3. Create request mapping methods for two actions
+		index.htm and login.htm
+		Sample Code as follows.
+		----------------------
+		
+		@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
+ 		public ModelAndView student(Model model) {
+	  
+	 				return new ModelAndView("index","command",model);
+ 		}
+ 
+ 	Sample login.htm action
+ 	
+ 	@RequestMapping("/login.htm")  
+	public String login(HttpServletRequest request, HttpServletResponse response,@ModelAttribute("Login")Login log) {
+	  
+	   //print the login name..
+	  
+ 			 return "login";
+ 	  }
+ 	
+ 	
+		
+4.Add web.xml 
+5. Add  Third-servlet.xml
+6. Create a folder named jsp in /WEB_INF/ Folder
+7. Add 2 JSP pages named index.jsp and login.jsp
+8. Design the index.jsp with SpringForm Tags
+--------------------------------------
+
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
+<html>
+  <head>
+    <title>Spring MVC login example.</title>
+  </head>
+ 
+  <body>
+  <form:form method = "POST" action = "login.htm" modelAttribute="command">
+  		<form:label path = "name">Name</form:label>
+  		<form:input path = "name" />
+  		 <input type = "submit" value = "Submit"/>
+  </form:form> 
+  
+ 
+  </body>  
+</html>
+
+ 9. Get the value in controller and print it in console.. 	
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+web.xml
+*******
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>SpringMVC1</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+   <servlet>
+      <servlet-name>Third</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+ 
+   <servlet-mapping>
+      <servlet-name>Third</servlet-name>
+      <url-pattern>*.htm</url-pattern>
+   </servlet-mapping>
+</web-app>     	  
+
+Third-servlet.xml
+*****************
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+ 
+   <context:component-scan base-package="com.dsrc" />
+
+   <bean class=
+      "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+</beans>
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.dsrc.bean.Login;
+
+@Controller
+public class MyController 
+{
+public MyController(){
+	
+}
+@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
+	public ModelAndView student() {
+
+				return new ModelAndView("index","command",new Login());
+	}
+@RequestMapping("/login.htm")  
+public String login(HttpServletRequest request, HttpServletResponse response,@ModelAttribute("Login")Login log) {
+  
+ System.out.println(log.getName());
+			 return "login";
+	  }
+}
+
+
+Login.java
+**********
+package com.dsrc.bean;
+
+public class Login {
+private String name;
+
+public Login(String name) {
+	this.name=name;
+}
+
+public Login() {
+	// TODO Auto-generated constructor stub
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+}
+
+index.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
+  <head>
+    <title>Spring MVC login example.</title>
+  </head>
+ 
+  <body>
+  <form:form method = "POST"  action = "login.htm" modelAttribute="command">
+  		<form:label path = "name">Name</form:label>
+  		<form:input path = "name" />
+  		 <input type = "submit" value = "Submit"/>
+  </form:form> 
+  
+ </body>
+  </body>  
+</html>
+
+login.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Welcome to Login</h1>
+<br>
+</body>
+</html>
+___________________________________________________________________________________________________________________________________________________________________
+
+5. Display the name in login.jsp page..   	
+
+web.xml
+*******
+(same 4Q)
+
+Third-servlet.xml
+*****************
+(same 4Q)
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.dsrc.bean.Login;
+
+
+@Controller
+public class MyController 
+{
+public MyController(){
+	
+}
+
+@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
+	public ModelAndView student() {
+
+				return new ModelAndView("index","command",new Login());
+	}
+@RequestMapping(value="/login.htm", method = RequestMethod.POST)  
+public String login(HttpServletRequest request, HttpServletResponse response,@ModelAttribute("Login")Login log,ModelMap model) {
+  
+  		model.addAttribute(log.getName());
+  
+			 return "login";
+	  }
+	
+}
+
+Login.java
+**********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+${Login.name}
+<br>
+</body>
+</html>
+_______________________________________________________________________________________________________________________________________________________________
+
+6.
+
+
+web.xml
+*******
+(same 5Q)
+
+Third-servlet.xml
+*****************
+(same 5Q)
+
+MyController.java
+*****************
+package com.dsrc.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.dsrc.bean.Login;
+
+import aj.org.objectweb.asm.Label;
+
+@Controller
+public class MyController {
+	public MyController(){}
+	
+	@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
+		public ModelAndView student(Model model) {
+		
+  
+ 				return new ModelAndView("index","command",model);
+		}
+
+//	Sample login.htm action
+	
+	@RequestMapping("/success.htm")  
+public String login(HttpServletRequest request, HttpServletResponse response,@ModelAttribute("Login")Login log,ModelMap model) {
+  
+// If the loginname and password is "SA" and "PASS" go to "succes.jsp" page.
+// Else  to error.jsp
+		String name=request.getParameter("logname");
+		String pass=request.getParameter("pass");
+		if(name.equals("sa") && pass.equals("pass"))
+		{
+			 return "success";
+		}
+		else{
+			
+			 return "error";
+	  }
+	}
+
+}
+
+
+Login.java
+**********
+package com.dsrc.bean;
+
+public class Login {
+	private String loginname;
+	private String password;
+	public String getLoginname() {
+		return loginname;
+	}
+	public void setLoginname(String loginname) {
+		this.loginname = loginname;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+
+}
+
+index.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form  action="success.htm">
+LoginName<input type="text" name="logname"> <br>
+Password<input type="password" name="pass"> <br>
+<input type="submit" value="Save"> <br>
+  	</form>
+</body>
+</html>
+
+success.jsp
+***********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<h1>Success</h1>
+</form>
+</body>
+</html> 
+
+error.jsp
+*********
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+<h1>Error</h1>
+</body>
+</html>
+________________________________________________________________________________________________________________________________________________________________________________
